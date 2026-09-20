@@ -52,6 +52,16 @@ export const createApp = async () => {
   await connectDB();
   await seedDatabase();
 
+  // Printed on every boot (not just in production) so a typo'd or missing
+  // origin shows up here instead of only surfacing as a CORS rejection on
+  // the first real request from the browser.
+  const origins = allowedOrigins();
+  console.log(
+    origins.length > 0
+      ? `[CORS] Allowed origin(s): ${origins.join(', ')}`
+      : '[CORS] No CORS_ORIGINS configured — only same-origin requests and (in development) localhost will be accepted.'
+  );
+
   const app = express();
 
   // Required so req.ip and secure cookies work behind Render/Vercel/Heroku.
